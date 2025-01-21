@@ -126,8 +126,8 @@
         <div class="container">
             <h2 class="mb-4">Hubungi Kami</h2>
             <p>Email: <a href="mailto:info@konsermusik.com">info@konsermusik.com</a></p>
-            <p>Telepon: +62 812 3456 7890</p>
-            <p>Alamat: Jl. Harmoni No. 123, Jakarta</p>
+            <p>Telepon: +62 xxxxxxx</p>
+            <p>Alamat: Jl. Maguwoharjo No. 123, Yogyakarta</p>
         </div>
     </section>
 

@@ -57,6 +57,7 @@
         <!-- Register Link -->
         <div class="mt-3 text-center">
             <p>Belum punya akun? <a href="{{ route('register') }}">Daftar Sekarang</a></p>
+            <p><a href="{{ route('landing') }}" class="btn btn-secondary">Kembali</a></p>
         </div>
     </div>
 

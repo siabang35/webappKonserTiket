@@ -20,50 +20,51 @@ class ConcertController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        // Validasi input
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
         ]);
 
-        Concert::create($request->all());
+        // Simpan data konser
+        Concert::create($validatedData);
 
-        return redirect()->route('concerts.index');
+        return redirect()->route('concerts.index')->with('success', 'Concert created successfully.');
     }
 
-    public function show($id)
+    public function show(Concert $concert)
     {
-        $concert = Concert::findOrFail($id);
         return view('concerts.show', compact('concert'));
     }
 
-    public function edit($id)
+    public function edit(Concert $concert)
     {
-        $concert = Concert::findOrFail($id);
         return view('concerts.edit', compact('concert'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Concert $concert)
     {
-        $request->validate([
+        // Validasi input
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
         ]);
 
-        $concert = Concert::findOrFail($id);
-        $concert->update($request->all());
+        // Update data konser
+        $concert->update($validatedData);
 
-        return redirect()->route('concerts.index');
+        return redirect()->route('concerts.index')->with('success', 'Concert updated successfully.');
     }
 
-    public function destroy($id)
+    public function destroy(Concert $concert)
     {
-        $concert = Concert::findOrFail($id);
+        // Hapus data konser
         $concert->delete();
 
-        return redirect()->route('concerts.index');
+        return redirect()->route('concerts.index')->with('success', 'Concert deleted successfully.');
     }
 }

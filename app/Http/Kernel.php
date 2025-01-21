@@ -4,7 +4,8 @@ use App\Http\Middleware\RedirectIfAuthenticated;
 class Kernel extends HttpKernel
 {
     protected $routeMiddleware = [
-        'auth' => Authenticate::class,
-        'guest' => RedirectIfAuthenticated::class,
-    ];
+    'auth' => \App\Http\Middleware\Authenticate::class,
+    'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+];
+
 }

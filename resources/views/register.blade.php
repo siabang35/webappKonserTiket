@@ -65,6 +65,7 @@
         <!-- Login Link -->
         <div class="mt-3 text-center">
             <p>Sudah punya akun? <a href="{{ route('login') }}">Login Sekarang</a></p>
+            <p><a href="{{ route('landing') }}" class="btn btn-secondary">Kembali</a></p>
         </div>
     </div>
 
