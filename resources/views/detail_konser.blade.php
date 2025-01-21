@@ -18,8 +18,9 @@
 </form>
 
 <!-- Tampilkan total harga jika ada -->
-@if(isset($order) && $order->total_price)
+@if($order ?? false)
     <div>
-        <strong>Total Harga: </strong>{{ $order->formatted_price }}
+        <strong>Total Harga:</strong> {{ number_format($order->total_price, 0, ',', '.') }}
     </div>
 @endif
+
