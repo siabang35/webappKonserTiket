@@ -9,13 +9,18 @@ class ConcertController extends Controller
 {
     public function index()
     {
-        $concerts = Concert::all();
-        return view('concerts.index', compact('concerts'));
+        // Ambil semua konser, tambahkan placeholder jika tidak ada gambar
+        $concerts = Concert::all()->map(function ($concert) {
+            $concert->image_url = $concert->image_url ?? asset('assets/images/placeholders/placeholder.png');
+            return $concert;
+        });
+
+        return view('concerts.index', compact('concerts')); // Kirim ke view index
     }
 
     public function create()
     {
-        return view('concerts.create');
+        return view('concerts.create'); // Tampilkan form untuk membuat konser
     }
 
     public function store(Request $request)
@@ -26,6 +31,7 @@ class ConcertController extends Controller
             'date' => 'required|date',
             'location' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
+            'image_url' => 'nullable|string|max:255', // Tambahkan validasi untuk URL gambar
         ]);
 
         // Simpan data konser
@@ -36,12 +42,15 @@ class ConcertController extends Controller
 
     public function show(Concert $concert)
     {
+        // Tambahkan gambar placeholder jika tidak ada gambar
+        $concert->image_url = $concert->image_url ?? asset('assets/images/placeholders/placeholder.png');
+
         return view('concerts.show', compact('concert'));
     }
 
     public function edit(Concert $concert)
     {
-        return view('concerts.edit', compact('concert'));
+        return view('concerts.edit', compact('concert')); // Tampilkan form edit konser
     }
 
     public function update(Request $request, Concert $concert)
@@ -52,6 +61,7 @@ class ConcertController extends Controller
             'date' => 'required|date',
             'location' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
+            'image_url' => 'nullable|string|max:255', // Tambahkan validasi untuk URL gambar
         ]);
 
         // Update data konser
@@ -67,4 +77,6 @@ class ConcertController extends Controller
 
         return redirect()->route('concerts.index')->with('success', 'Concert deleted successfully.');
     }
+
 }
+

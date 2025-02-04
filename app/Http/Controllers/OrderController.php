@@ -26,11 +26,21 @@ class OrderController extends Controller
 
         try {
             // Ambil konser berdasarkan ID
-            $concert = Concert::findOrFail($validated['concert_id']);
+            $concert = Concert::find($validated['concert_id']);
 
-            // Hitung harga tiket
-            $ticket_price = $validated['ticket_type'] === 'vip' ? $concert->price * 2 : $concert->price;
+            // Periksa apakah konser sedang dalam promosi
+            $ticket_price = $concert->is_promotion
+                ? ($validated['ticket_type'] === 'vip' ? $concert->promotion_price * 2 : $concert->promotion_price)
+                : ($validated['ticket_type'] === 'vip' ? $concert->price * 2 : $concert->price);
+
+            // Hitung total harga
             $total_price = $ticket_price * $validated['ticket_count'];
+
+            // Optional: Calculate a different amount for the "total_amount" if necessary (e.g., with a discount or additional fee)
+            $total_amount = $total_price; // You can modify this based on your business logic
+
+            // Set the initial order status (e.g., 'pending', 'paid', etc.)
+            $status = 'pending';
 
             // Simpan data pesanan
             $order = Order::create([
@@ -39,6 +49,8 @@ class OrderController extends Controller
                 'ticket_type' => $validated['ticket_type'],
                 'ticket_count' => $validated['ticket_count'],
                 'total_price' => $total_price,
+                'total_amount' => $total_amount, // Use the correct calculation here
+                'status' => $status, // Set the initial status as 'pending'
             ]);
 
             // Logging keberhasilan pesanan
@@ -46,10 +58,21 @@ class OrderController extends Controller
                 'order_id' => $order->id,
                 'user_id' => auth()->id(),
                 'concert_id' => $concert->id,
+                'ticket_type' => $validated['ticket_type'],
+                'total_price' => $total_price,
+                'status' => $status,
             ]);
+             // Ambil data dari request atau set nilai lainnya
+        $concertId = $validated['concert_id'];
+        $ticketType = $validated['ticket_type'];
+        $ticketCount = $validated['ticket_count'];
+        $totalPrice = $validated['total_price'];
+        $totalAmount = $validated['total_amount'];
 
-            // Redirect dengan pesan sukses
-            return redirect()->route('order.konfirmasi')->with('success', 'Tiket berhasil dipesan!');
+            // Redirect ke halaman konfirmasi dengan data pesanan
+            return redirect()->route('orders.store')->with('order', $order);
+
+
         } catch (\Exception $e) {
             // Logging kesalahan
             Log::error('Error saat memproses pemesanan: ' . $e->getMessage(), [
@@ -58,6 +81,25 @@ class OrderController extends Controller
             ]);
             return back()->withErrors('Gagal memesan tiket. Silakan coba lagi.');
         }
+    }
+
+    /**
+     * Menampilkan konfirmasi pemesanan.
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
+    public function konfirmasi()
+    {
+        // Get the 'order' data from the session
+        $order = session('order');
+
+        // Check if the order exists in the session
+        if (!$order) {
+            return redirect()->route('order.store')->withErrors('Order tidak ditemukan.');
+        }
+
+        // Return the konfirmasi view with the order data
+        return view('orders.store', compact('order'));
     }
 
     /**
@@ -74,7 +116,7 @@ class OrderController extends Controller
                 ->latest()
                 ->get();
 
-            return view('orders.history', compact('orders')); // Perbaiki nama view sesuai konvensi
+            return view('orders.history', compact('orders'));
         } catch (\Exception $e) {
             // Logging kesalahan
             Log::error('Error saat mengambil riwayat pemesanan: ' . $e->getMessage(), [

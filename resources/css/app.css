@@ -1,3 +1,97 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    color: #212529;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header (Navbar) */
+.navbar {
+    background-color: #007bff; /* Warna biru primary */
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #fff !important;
+}
+
+.nav-link {
+    color: #fff !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #d1d1d1 !important;
+}
+
+/* Dropdown */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-item {
+    color: #212529 !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #007bff !important;
+    color: #fff !important;
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    padding: 1rem;
+}
+
+/* Buttons */
+button, .btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover, .btn:hover {
+    opacity: 0.9;
+}
+
+/* Footer */
+footer {
+    background-color: #212529;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+}
+
+footer a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #0056b3;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .navbar-collapse {
+        text-align: center;
+    }
+
+    .dropdown-menu {
+        position: static; /* Menghindari masalah dengan dropdown di layar kecil */
+        float: none;
+    }
+}

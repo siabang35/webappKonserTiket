@@ -26,8 +26,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Check if the user has verified email.
+     */
+    public function hasVerifiedEmail()
+    {
+        return $this->email_verified_at !== null;
+    }
+
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class, 'user_id', 'id');
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
     }
 }

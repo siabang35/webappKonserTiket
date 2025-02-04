@@ -10,9 +10,22 @@ use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    /** 
+    /**
      * Method untuk registrasi pengguna baru.
      */
+    public function showLoginForm()
+    {
+        Log::info('showLoginForm method dipanggil.');
+        return view('login'); // Pastikan file login.blade.php ada di resources/views
+    }
+
+    /**
+     * Menampilkan form registrasi.
+     */
+    public function showRegisterForm()
+    {
+        return view('register'); // Pastikan file register.blade.php ada di resources/views
+    }
     public function register(Request $request)
     {
         // Validasi input
@@ -51,35 +64,36 @@ class AuthController extends Controller
             return back()->withErrors(['general' => 'Gagal registrasi. Silakan coba lagi.'])->withInput();
         }
     }
-
-    /** 
+    /**
      * Method untuk login pengguna.
      */
     public function login(Request $request)
-    {
-        // Validasi input
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ], [
-            'email.required' => 'Email harus diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'password.required' => 'Password harus diisi.',
-            'password.min' => 'Password harus memiliki minimal 6 karakter.',
-        ]);
+{
+    // Validasi input
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|string|min:6',
+    ], [
+        'email.required' => 'Email harus diisi.',
+        'email.email' => 'Format email tidak valid.',
+        'password.required' => 'Password harus diisi.',
+        'password.min' => 'Password harus memiliki minimal 6 karakter.',
+    ]);
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            // Regenerasi sesi untuk keamanan
-            $request->session()->regenerate();
+    // Validasi login
+    if (Auth::attempt($credentials, $request->filled('remember'))) {
+        // Regenerasi sesi untuk keamanan
+        $request->session()->regenerate();
 
-            return redirect()->route('dashboard')->with('success', 'Login berhasil!');
-        }
-
-        // Jika login gagal
-        return back()->withErrors(['email' => 'Email atau password salah'])->withInput();
+        return redirect()->route('dashboard')->with('success', 'Login berhasil!');
     }
 
-    /** 
+    // Jika login gagal
+    return back()->withErrors(['email' => 'Email atau password salah'])->withInput();
+}
+
+
+    /**
      * Method untuk logout pengguna.
      */
     public function logout(Request $request)
